@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Graphql.models;
+using Graphql.Mutations;
 using Graphql.queries;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +23,7 @@ namespace Graphql
             services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(
                 Configuration.GetConnectionString("dbCon")
             ));
-            services.AddGraphQLServer().AddQueryType<Query>();
+            services.AddGraphQLServer().AddMutationType<Mutation>().AddQueryType<Query>().AddSubscriptionType<subscription>().AddInMemorySubscriptions();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +34,7 @@ namespace Graphql
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseWebSockets();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

@@ -4,9 +4,9 @@ using HotChocolate;
 
 namespace Graphql.queries{
     public class Query{
-        public platform GetPlatforms([Service] AppDbContext context){
+        public IQueryable<platform> GetPlatforms([Service] AppDbContext context){
            
-           return context.Platforms.FirstOrDefault();
+           return context.Platforms;
         }
     }
 }
